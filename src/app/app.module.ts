@@ -1,3 +1,4 @@
+import { WalletModule } from './wallet/wallet.module';
 import { MetamaskComponent } from './metamask/metamask.component';
 import { MetamaskModule } from './metamask/metamask.module';
 import { NgModule } from '@angular/core';
@@ -13,7 +14,8 @@ import { AppComponent } from './app.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    MetamaskModule
+    MetamaskModule,
+    WalletModule
   ],
   providers: [],
   bootstrap: [AppComponent]
