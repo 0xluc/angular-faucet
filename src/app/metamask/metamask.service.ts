@@ -1,30 +1,24 @@
-import { Component, OnInit, ChangeDetectorRef} from '@angular/core';
-import Web3 from 'web3';
+import Web3  from 'web3';
+import { Injectable, ChangeDetectorRef } from '@angular/core';
 
 declare global {
   interface Window {
     ethereum: any;
   }
 }
-@Component({
-  selector: 'app-metamask',
-  templateUrl: './metamask.component.html',
-  styleUrls: ['./metamask.component.css']
-})
 
-export class MetamaskComponent implements OnInit{
+@Injectable({
+  providedIn: 'root'
+})
+export class MetamaskService {
   ethereum = window.ethereum;
   web3: any
   selectedAccount: string = ''
   selectedNetwork: any
   avaxFujiTestnet: string = 'https://api.avax-test.network/ext/bc/C/rpc'
 
-  constructor(private cd: ChangeDetectorRef){
 
-  }
-  ngOnInit(): void {
-      this.connectToMetamask()
-  }
+  constructor(private cd: ChangeDetectorRef) { }
   connectToMetamask() {
     if(typeof this.ethereum === 'undefined'){
       console.log("Install metamask")
@@ -93,11 +87,5 @@ export class MetamaskComponent implements OnInit{
     });
   }
 
-  disconnectFromMetaMask() {
-    this.ethereum.off('accountsChanged');
-    this.ethereum.off('chainChanged');
-    this.web3 = null;
-    this.selectedAccount = '';
-    this.selectedNetwork = null;
-  }
+  
 }
