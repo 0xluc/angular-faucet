@@ -1,3 +1,5 @@
+import { MetamaskComponent } from './metamask/metamask.component';
+import { MetamaskModule } from './metamask/metamask.module';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -10,7 +12,8 @@ import { AppComponent } from './app.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    MetamaskModule
   ],
   providers: [],
   bootstrap: [AppComponent]
