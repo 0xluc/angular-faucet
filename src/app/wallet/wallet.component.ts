@@ -1,3 +1,4 @@
+import { ContractLoaderService } from './../contracts/contract-loader.service';
 import { MetamaskService } from './../metamask/metamask.service';
 import {
   Component,
@@ -15,9 +16,11 @@ export class WalletComponent implements OnInit {
   public address: string = '';
   public selectedNetwork = window.ethereum.networkVersion 
   avaxFujiTestnet: string = 'https://api.avax-test.network/ext/bc/C/rpc'
+  loadedContract:any
   constructor(
     private metamaskService: MetamaskService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private contractService: ContractLoaderService
   ) {}
  async ngOnInit() {
     this.connectToWallet();
@@ -27,6 +30,8 @@ export class WalletComponent implements OnInit {
     await this.metamaskService.addChainChangedListener((chainId) => {
       this.updateChain()
     })
+    this.loadedContract = await this.contractService.loadContractAbi
+    console.log(this.loadedContract)
   }
   ngOnDestroy(): void {
     this.metamaskService.removeWalletChangeListener((accounts: string[]) => {

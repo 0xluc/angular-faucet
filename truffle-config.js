@@ -5,6 +5,7 @@ const SEED = process.env.SEED
 const HDWalletProvider = require('@truffle/hdwallet-provider');
 
 module.exports = {
+  contracts_build_directory:"./src/assets/build",
   networks: {
     avax: {
       provider: () => new HDWalletProvider(seed,"https://api.avax-test.network/ext/bc/C/rpc" ),
