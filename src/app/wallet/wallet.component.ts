@@ -7,8 +7,7 @@ import {
   HostListener,
 } from '@angular/core';
 
-import detectEthereumProvider from '@metamask/detect-provider';
-  declare function loadContract(nome:string, provider: any):any
+
 
 @Component({
   selector: 'app-wallet',
@@ -34,8 +33,8 @@ export class WalletComponent implements OnInit {
       this.updateChain()
     })
     console.log(this.loadedContract)
-    const provider = await detectEthereumProvider()
-    console.log(loadContract("Faucet", provider))
+    const a = await this.contractService.loadContractAbi("Faucet")
+    console.log(a)
   }
   ngOnDestroy(): void {
     this.metamaskService.removeWalletChangeListener((accounts: string[]) => {
