@@ -8,7 +8,7 @@ module.exports = {
   contracts_build_directory:"./src/assets/build",
   networks: {
     avax: {
-      provider: () => new HDWalletProvider(seed,"https://api.avax-test.network/ext/bc/C/rpc" ),
+      provider: () => new HDWalletProvider(SEED,"https://api.avax-test.network/ext/bc/C/rpc" ),
       network_id:43113
 
     }
