@@ -15,9 +15,7 @@ export class ContractLoaderService {
     const web3 = new Web3(Web3.givenProvider)
     const abi = await lastValueFrom(this.http.get<any>(`assets/build/${contractName}.json`));
     const contract  = new web3.eth.Contract(abi.abi, abi.networks['43113'].address)
-    return  contract
-
-
+    return contract
   }
 
 }

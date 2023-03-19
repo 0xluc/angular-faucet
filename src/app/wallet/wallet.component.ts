@@ -1,3 +1,4 @@
+import Web3  from 'web3';
 import { ContractLoaderService } from './../contracts/contract-loader.service';
 import { MetamaskService } from './../metamask/metamask.service';
 import {
@@ -6,8 +7,6 @@ import {
   ChangeDetectorRef,
   HostListener,
 } from '@angular/core';
-
-
 
 @Component({
   selector: 'app-wallet',
@@ -18,13 +17,16 @@ export class WalletComponent implements OnInit {
   public address: string = '';
   public selectedNetwork = window.ethereum.networkVersion 
   avaxFujiTestnet: string = 'https://api.avax-test.network/ext/bc/C/rpc'
-  loadedContract:any
+  contractInstace:any
+  contractBalance:string
+  amount = 0.01
   constructor(
     private metamaskService: MetamaskService,
     private cd: ChangeDetectorRef,
     private contractService: ContractLoaderService
   ) {}
  async ngOnInit() {
+
     this.connectToWallet();
     this.metamaskService.addWalletChangeListener((accounts: string[]) => {
       this.updateDisplayedWallet(accounts[0]);
@@ -32,9 +34,7 @@ export class WalletComponent implements OnInit {
     await this.metamaskService.addChainChangedListener((chainId) => {
       this.updateChain()
     })
-    console.log(this.loadedContract)
-    const a = await this.contractService.loadContractAbi("Faucet")
-    console.log(a)
+    await this.loadContractBalance()
   }
   ngOnDestroy(): void {
     this.metamaskService.removeWalletChangeListener((accounts: string[]) => {
@@ -64,10 +64,10 @@ export class WalletComponent implements OnInit {
         // .catch((error:string) => {console.log(error)})
         // window.ethereum.on('accountsChanged', async() => {
         //   try {
-        //     const address = await this.metamaskService.onAccountsChanged();
+          //     const address = await this.metamaskService.onAccountsChanged();
         //     this.address = address;
         //   } catch(error) {
-        //     console.log(error)
+          //     console.log(error)
         //   }
         // })
         // window.ethereum.on('chainChanged', () => {
@@ -77,5 +77,29 @@ export class WalletComponent implements OnInit {
       .catch((error: string) => {
         console.log(error);
       });
+  }
+  async loadContractBalance() {
+    const web3 = new Web3(Web3.givenProvider)
+    await this.contractService.loadContractAbi("Faucet")
+    .then((response) => {
+      this.contractInstace = response
+    })
+    this.contractBalance = await web3.eth.getBalance(this.contractInstace.options.address)
+    this.contractBalance = web3.utils.fromWei(this.contractBalance)
+  }
+  async addFunds() {
+    if(this.contractInstace){
+      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+      console.log(this.contractInstace)
+      console.log(accounts[0])
+      await this.contractInstace.methods.addFunds().send({
+        from: accounts[0],
+        value: Web3.utils.toWei(`${this.amount}`, "ether")
+      })
+      await this.loadContractBalance()
+      await this.cd.detectChanges()
+    } else{
+      console.error("Contract not loaded")
+    }
   }
 }
