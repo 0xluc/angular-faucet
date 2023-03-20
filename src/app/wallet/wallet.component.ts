@@ -102,4 +102,16 @@ export class WalletComponent implements OnInit {
       console.error("Contract not loaded")
     }
   }
+  async withdraw() {
+    if(this.contractInstace){
+      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+      await this.contractInstace.methods.withdraw(Web3.utils.toWei(`${this.amount}`, 'ether')).send({
+        from: accounts[0]
+      })
+      await this.loadContractBalance()
+      await this.cd.detectChanges()
+    } else {
+      console.log("Contract not loaded")
+    }
+  }
 }
