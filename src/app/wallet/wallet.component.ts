@@ -7,6 +7,7 @@ import {
   ChangeDetectorRef,
   HostListener,
 } from '@angular/core';
+import {MessageService} from 'primeng/api';
 
 @Component({
   selector: 'app-wallet',
@@ -14,8 +15,8 @@ import {
   styleUrls: ['./wallet.component.css'],
 })
 export class WalletComponent implements OnInit {
-  public address: string = '';
-  public selectedNetwork = window.ethereum.networkVersion 
+  public address = ''
+  public selectedNetwork:any
   avaxFujiTestnet: string = 'https://api.avax-test.network/ext/bc/C/rpc'
   contractInstace:any
   contractBalance:string
@@ -23,30 +24,41 @@ export class WalletComponent implements OnInit {
   constructor(
     private metamaskService: MetamaskService,
     private cd: ChangeDetectorRef,
-    private contractService: ContractLoaderService
+    private contractService: ContractLoaderService,
+    private messageService: MessageService
   ) {}
- async ngOnInit() {
 
-    this.connectToWallet();
-    this.metamaskService.addWalletChangeListener((accounts: string[]) => {
-      this.updateDisplayedWallet(accounts[0]);
-    });
-    await this.metamaskService.addChainChangedListener((chainId) => {
-      this.updateChain()
-    })
-    await this.loadContractBalance()
+  async ngOnInit() {
+      await this.metamaskService.addWalletChangeListener((accounts: string[]) => {
+        this.updateDisplayedWallet(accounts[0]);
+      });
+      await this.metamaskService.addChainChangedListener((chainId) => {
+        this.updateChain()
+      }) 
   }
-  ngOnDestroy(): void {
-    this.metamaskService.removeWalletChangeListener((accounts: string[]) => {
+  async ngOnDestroy() {
+    await this.metamaskService.removeWalletChangeListener((accounts: string[]) => {
       this.updateDisplayedWallet(accounts[0]);
     });
-    this.metamaskService.removeChainChangedListener((chainId) => {
+    await this.metamaskService.removeChainChangedListener((chainId) => {
       this.updateChain()
     })
   }
-
-  updateDisplayedWallet(account: string): void {
-    this.address = account;
+  async clickConnect(){
+    if(window.ethereum != undefined){
+      this.selectedNetwork = window.ethereum.networkVersion
+      await this.connectToWallet();
+      await this.loadContractBalance()
+     } else {
+      this.messageService.add({severity: 'warning', detail: 'Instale a metamask!'})
+    }
+  }
+  updateDisplayedWallet(account: any): void {
+    if(account){
+      this.address = account;
+    } else{
+      this.address = ''
+    }
     this.cd.detectChanges();
   }
   updateChain(){
@@ -54,7 +66,7 @@ export class WalletComponent implements OnInit {
     this.cd.detectChanges()
 
   }
-  public connectToWallet() {
+  public async connectToWallet() {
     this.metamaskService
       .connectToMetamask()
       .then((address: string) => {

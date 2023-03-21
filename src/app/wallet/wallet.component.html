@@ -1,12 +1,18 @@
-<div class="balance-view is-size-2">
-    Current Balance: <strong>{{contractBalance}} AVAX</strong>
-</div>
-<div class="is-flex is-align-items-center">
-    <span>
-        Wallet: {{address}}
+<div *ngIf="address.length>1">
+    <div class="balance-view is-size-2">
+        Current Balance: <strong>{{contractBalance}} AVAX</strong>
+    </div>
+    <div class="is-flex is-align-items-center">
+        <span>
+            Wallet: {{address}}
+    
+        </span>
+    </div>
+    <p-inputNumber  [(ngModel)]="amount" mode="decimal" [maxFractionDigits]="5"></p-inputNumber>
+    <button (click)="addFunds()" class="button is-primary is-light ml-2 mr-2">Donate</button>
+    <button (click)="withdraw()" class="button is-danger is-light">Withdraw</button>
 
-    </span>
 </div>
-<p-inputNumber  [(ngModel)]="amount" mode="decimal" [maxFractionDigits]="5"></p-inputNumber>
-<button (click)="addFunds()" class="button is-primary is-light ml-2 mr-2">Donate</button>
-<button (click)="withdraw()" class="button is-danger is-light">Withdraw</button>
+<div *ngIf="address.length<1">
+    <button type="button" class="nes-btn is-primary" (click)="clickConnect()">Conectar</button>
+</div>
