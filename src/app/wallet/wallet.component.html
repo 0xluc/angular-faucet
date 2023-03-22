@@ -8,7 +8,7 @@
     
         </span>
     </div>
-    <p-inputNumber  [(ngModel)]="amount" mode="decimal" [maxFractionDigits]="5"></p-inputNumber>
+    <input class="nes-input" name="inputAmount" [(ngModel)]="amount" mode="decimal" type="number" placeholder="0.01" min="0" step="0.01" >
     <button (click)="addFunds()" class="button is-primary is-light ml-2 mr-2">Donate</button>
     <button (click)="withdraw()" class="button is-danger is-light">Withdraw</button>
 
