@@ -1,6 +1,5 @@
 require('dotenv').config();
 const SEED = process.env.SEED
-// const { MNEMONIC, PROJECT_ID } = process.env;
 
 const HDWalletProvider = require('@truffle/hdwallet-provider');
 
@@ -14,16 +13,12 @@ module.exports = {
     }
   },
 
-  // Set default mocha options here, use special reporters, etc.
   mocha: {
   },
 
   compilers: {
     solc: {
-      version: "0.8.18"      // Fetch exact version from solc-bin (default: truffle's version)
-    
+      version: "0.8.18"    
     }
   },
-
-
 };
